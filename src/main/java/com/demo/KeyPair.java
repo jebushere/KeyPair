@@ -14,7 +14,7 @@ public final class KeyPair<K, V> {
     public V get(K key) {
         assert Objects.nonNull(key);
         for (Pair<K, V> pair : pairs) {
-            if (Objects.nonNull(pair.getKey()) && pair.getKey().equals(key)) {
+            if (Objects.nonNull(pair) && pair.getKey().equals(key)) {
                 return pair.getValue();
             }
         }
@@ -32,6 +32,19 @@ public final class KeyPair<K, V> {
             }
         }
         pairs[index.orElseThrow(() -> new RuntimeException("Maximum size reached"))] = new Pair<>(key, value);
+    }
+
+    public void remove(K key) {
+        assert Objects.nonNull(key);
+        Optional<Integer> index = Optional.empty();
+        for (int i = 0; i < pairs.length; i++) {
+            Pair<K, V> pair = pairs[i];
+            if (Objects.nonNull(pair) && pair.getKey().equals(key)) {
+                index = Optional.of(i);
+                break;
+            }
+        }
+        index.ifPresent(i -> pairs[i] = null);
     }
 
 }

@@ -56,10 +56,33 @@ public class KeyPairTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void putMoreThanArraySizeByDifferentKeyValueSuccess() {
+    public void putMoreThanArraySizeByDifferentKeyValueFailure() {
         final Integer value = 123;
         KeyPair<String, Integer> keyPair = new KeyPair<>();
-        IntStream.range(0, 115).forEach(i -> keyPair.put(Integer.toString(i), value));
+        IntStream.range(0, 11).forEach(i -> keyPair.put(Integer.toString(i), value));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void removeByNullFailure() {
+        KeyPair<String, Integer> keyPair = new KeyPair<>();
+        keyPair.remove(null);
+    }
+
+    @Test
+    public void removeByAvailableValueSuccess() {
+        final String key = "Test1";
+        final Integer value = 123;
+        KeyPair<String, Integer> keyPair = new KeyPair<>();
+        keyPair.put(key, value);
+        Assert.assertEquals(value, keyPair.get(key));
+        keyPair.remove(key);
+        Assert.assertNull(keyPair.get(key));
+    }
+
+    @Test
+    public void removeByUnavailableValueSuccess() {
+        KeyPair<String, Integer> keyPair = new KeyPair<>();
+        keyPair.remove("Test1");
     }
 
 }
